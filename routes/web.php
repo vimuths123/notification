@@ -1,6 +1,9 @@
 <?php
 
+use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -32,4 +35,23 @@ Route::middleware([
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
+
+    Route::get('/send_notifications', function () {
+        $users = User::all();
+        return Inertia::render('SendNotification', [
+            'users' => $users
+        ]);
+    });
+
+    Route::post('/send_notifications', function (Request $request) {
+        $notification = Notification::create([
+            'user_id' => $request->input('user_id'),
+            'title' => $request->input('title'),
+            'body' => $request->input('body')
+        ]);
+
+        return redirect()->back()->banner('Notification added.');
+    })->name('send_notifications');
 });
+
+
