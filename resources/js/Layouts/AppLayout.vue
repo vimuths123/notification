@@ -26,6 +26,20 @@ const switchToTeam = (team) => {
 const logout = () => {
     router.post(route('logout'));
 };
+
+const notificationCount = ref(0);
+const notifications = ref([]);
+const newNotification = ref({});
+
+window.Echo.channel("notifications").listen("NotificationCreated", (e) => {
+    notificationCount.value++;
+    newNotification.value = {
+        id: e.notification.id,
+        title: e.notification.title,
+        body: e.notification.body
+    }
+    notifications.value.unshift(newNotification.value);
+});
 </script>
 
 <template>
@@ -119,8 +133,8 @@ const logout = () => {
                                     <template #trigger>
                                         <BellIcon class="h-7 w-7 text-gray-600" />
 
-                                        <span class="absolute bottom-3 left-3 flex items-center justify-center h-5 w-5 rounded-full bg-red-600 text-white text-xs">
-                                            {{ 2 }}
+                                        <span v-if="notificationCount > 0" class="absolute bottom-3 left-3 flex items-center justify-center h-5 w-5 rounded-full bg-red-600 text-white text-xs">
+                                            {{ notificationCount }}
                                         </span>
                                     </template>
 
@@ -132,19 +146,10 @@ const logout = () => {
 
                                         <div class="border-t border-gray-200" />
 
-                                        <div>
+                                        <div v-for="(notification, index) in notifications" :key="index">
                                             <DropdownLink :href="route('dashboard')">
-                                                <div class="block text-xs">Title</div>
-                                                <div>Notification description</div>
-                                            </DropdownLink>
-
-                                            <div class="border-t border-gray-200" />
-                                        </div>
-
-                                        <div>
-                                            <DropdownLink :href="route('dashboard')">
-                                                <div class="block text-xs">Title 2</div>
-                                                <div>Notification description 2</div>
+                                                <div class="block text-xs">{{ notification.title }}</div>
+                                                <div>{{ notification.body }}</div>
                                             </DropdownLink>
 
                                             <div class="border-t border-gray-200" />
@@ -327,3 +332,4 @@ const logout = () => {
         </div>
     </div>
 </template>
+

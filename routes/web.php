@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\NotificationCreated;
 use App\Models\Notification;
 use App\Models\User;
 use Illuminate\Foundation\Application;
@@ -49,6 +50,8 @@ Route::middleware([
             'title' => $request->input('title'),
             'body' => $request->input('body')
         ]);
+
+        event(new NotificationCreated($notification));
 
         return redirect()->back()->banner('Notification added.');
     })->name('send_notifications');
