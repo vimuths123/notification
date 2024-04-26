@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { Head, Link, router } from '@inertiajs/vue3';
+import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
 import Dropdown from '@/Components/Dropdown.vue';
@@ -31,7 +31,7 @@ const notificationCount = ref(0);
 const notifications = ref([]);
 const newNotification = ref({});
 
-window.Echo.channel("notifications").listen("NotificationCreated", (e) => {
+window.Echo.private("notifications." + usePage().props.auth.user.id).listen("NotificationCreated", (e) => {
     notificationCount.value++;
     newNotification.value = {
         id: e.notification.id,
