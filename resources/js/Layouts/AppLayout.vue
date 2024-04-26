@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import { Head, Link, router, usePage } from '@inertiajs/vue3';
 import ApplicationMark from '@/Components/ApplicationMark.vue';
 import Banner from '@/Components/Banner.vue';
@@ -39,6 +39,17 @@ window.Echo.private("notifications." + usePage().props.auth.user.id).listen("Not
         body: e.notification.body
     }
     notifications.value.unshift(newNotification.value);
+});
+
+onMounted(() => {
+    axios.get('/get_notifications')
+        .then(response => {
+            notifications.value = response.data;
+            notificationCount.value = response.data.length;
+        })
+        .catch(error => {
+            console.error('Error fetching notifications:', error);
+        });
 });
 </script>
 

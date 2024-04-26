@@ -55,6 +55,13 @@ Route::middleware([
 
         return redirect()->back()->banner('Notification added.');
     })->name('send_notifications');
+
+    Route::get('get_notifications', function (Request $request) {
+        return $user_notifications = Notification::where('user_id', $request->user()->id)
+            ->where('read', false)
+            ->latest()
+            ->get();
+    })->name('get_notifications');
 });
 
 
