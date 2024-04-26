@@ -158,7 +158,7 @@ onMounted(() => {
                                         <div class="border-t border-gray-200" />
 
                                         <div v-for="(notification, index) in notifications" :key="index">
-                                            <DropdownLink :href="route('dashboard')">
+                                            <DropdownLink :href="route('click_notification', notification.id)">
                                                 <div class="block text-xs">{{ notification.title }}</div>
                                                 <div>{{ notification.body }}</div>
                                             </DropdownLink>

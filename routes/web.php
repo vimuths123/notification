@@ -62,6 +62,13 @@ Route::middleware([
             ->latest()
             ->get();
     })->name('get_notifications');
+
+    Route::get('click_notification/{notification}', function (Notification $notification) {
+        $notification->read = true;
+        $notification->save();
+        
+        return redirect()->back()->banner('Notification clicked.');
+    })->name('click_notification');
 });
 
 
